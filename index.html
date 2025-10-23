@@ -721,9 +721,7 @@
                 ></textarea>
               </div>
 
-              <div class="col-md-12">
-                <div class="g-recaptcha" data-sitekey="6LfdbfQrAAAAAJ5ddq6ShhBb3lBn7l5Ub2g7xx3Q"></div>
-              </div>
+
 
                 <button type="submit" class="btn btn-success btn-lg">Send Message</button>
               </div>
@@ -791,9 +789,6 @@
     <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-    <!-- Google reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js"></script>
-
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 
@@ -802,16 +797,8 @@
       document.getElementById('contactForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent form from submitting and redirecting
 
-        // Check if reCAPTCHA is completed
-        const recaptchaResponse = grecaptcha.getResponse();
-        if (recaptchaResponse.length === 0) {
-          alert('Please complete the reCAPTCHA verification.');
-          return;
-        }
-
         // Collect form data
         const formData = new FormData(this);
-        formData.append('g-recaptcha-response', recaptchaResponse);
 
         // Send form data to PHP script via AJAX
         fetch('forms/contact.php', {
@@ -823,7 +810,6 @@
           if (data.status === 'success') {
             alert('Message sent successfully!'); // Success popup
             document.getElementById('contactForm').reset(); // Reset form
-            grecaptcha.reset(); // Reset reCAPTCHA
           } else {
             alert('Failed to send message: ' + data.message); // Error popup
           }
