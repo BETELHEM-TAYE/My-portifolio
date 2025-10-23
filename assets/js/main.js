@@ -210,4 +210,50 @@
         );
       });
   });
+
+  /**
+   * Contact form handler using EmailJS
+   */
+  const contactForm = document.querySelector(".contact-form");
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const loading = this.querySelector(".loading");
+      const errorMessage = this.querySelector(".error-message");
+      const sentMessage = this.querySelector(".sent-message");
+      const submitButton = this.querySelector('button[type="submit"]');
+
+      // Show loading
+      loading.style.display = "block";
+      errorMessage.style.display = "none";
+      sentMessage.style.display = "none";
+      submitButton.disabled = true;
+
+      // Prepare template parameters
+      const templateParams = {
+        name: this.name.value,
+        email: this.email.value,
+        Subject: this.subject.value,
+        message: this.message.value,
+        time: new Date().toLocaleString(),
+      };
+
+      // Send email using EmailJS
+      emailjs
+        .send("service_qbyqa6a", "template_iow30uf", templateParams)
+        .then(function (response) {
+          loading.style.display = "none";
+          submitButton.disabled = false;
+          sentMessage.style.display = "block";
+          contactForm.reset();
+        })
+        .catch(function (error) {
+          loading.style.display = "none";
+          submitButton.disabled = false;
+          errorMessage.textContent = "An error occurred. Please try again.";
+          errorMessage.style.display = "block";
+        });
+    });
+  }
 })();
