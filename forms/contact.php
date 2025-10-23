@@ -26,37 +26,7 @@
   );
   */
 
-  // Verify reCAPTCHA
-  $recaptcha_secret = 'YOUR_SECRET_KEY'; // Replace with your actual reCAPTCHA secret key
-  $recaptcha_response = $_POST['g-recaptcha-response'];
 
-  if (empty($recaptcha_response)) {
-    echo json_encode(['status' => 'error', 'message' => 'reCAPTCHA verification failed']);
-    exit;
-  }
-
-  $url = 'https://www.google.com/recaptcha/api/siteverify';
-  $data = array(
-    'secret' => $recaptcha_secret,
-    'response' => $recaptcha_response
-  );
-
-  $options = array(
-    'http' => array(
-      'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-      'method' => 'POST',
-      'content' => http_build_query($data)
-    )
-  );
-
-  $context = stream_context_create($options);
-  $result = file_get_contents($url, false, $context);
-  $result_json = json_decode($result, true);
-
-  if (!$result_json['success']) {
-    echo json_encode(['status' => 'error', 'message' => 'reCAPTCHA verification failed']);
-    exit;
-  }
 
   $contact->add_message( $_POST['name'], 'From');
   $contact->add_message( $_POST['email'], 'Email');
