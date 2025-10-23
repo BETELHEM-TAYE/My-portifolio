@@ -78,7 +78,7 @@
     <main class="main">
       <!-- Hero Section -->
       <section id="hero" class="hero section dark-background">
-        <img src="assets\img\3...jpg" alt="" data-aos="fade-in" />
+        <img src="assets\img\Hero-img.jpg" alt="" data-aos="fade-in" />
 
         <div class="container" data-aos="zoom-out" data-aos-delay="100">
           <h2>BETELHEM TAYE</h2>
@@ -105,11 +105,11 @@
       <!-- /Hero Section -->
 
       <!-- About Section -->
-      <section id="about" class="about section">
+      <section id="about" class="about section dark-background">
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div class="row gy-4 justify-content-center">
             <div class="col-lg-4">
-              <img src="assets/img/11.jpg" class="img-fluid" alt="" />
+              <img src="assets/img/about.jpg" class="img-fluid" alt="" />
             </div>
             <div class="col-lg-8 content">
               <h2>
@@ -585,7 +585,7 @@
       <!-- /Portfolio Section -->
 
       <!-- Contact Section -->
-      <section id="contact" class="contact section">
+      <section id="contact" class="contact section dark-background">
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Contact</h2>
@@ -673,8 +673,7 @@
           </div>
 
           <form
-            action="forms/contact.php"
-            method="post"
+            id="contactForm"
             class="contact-form"
             data-aos="fade-up"
             data-aos-delay="600"
@@ -720,14 +719,11 @@
                 ></textarea>
               </div>
 
-              <div class="col-md-12 text-center">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">
-                  Your message has been sent. Thank you!
-                </div>
+              <div class="col-md-12">
+                <div class="g-recaptcha" data-sitekey="6LfdbfQrAAAAAJ5ddq6ShhBb3lBn7l5Ub2g7xx3Q"></div>
+              </div>
 
-                <button type="submit">Send Message</button>
+                <button type="submit" class="btn btn-success btn-lg">Send Message</button>
               </div>
             </div>
           </form>
@@ -804,8 +800,45 @@
       })();
     </script>
 
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    <!-- Contact Form Handler -->
+    <script>
+      document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting and redirecting
+
+        // Check if reCAPTCHA is completed
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (recaptchaResponse.length === 0) {
+          alert('Please complete the reCAPTCHA verification.');
+          return;
+        }
+
+        // Collect form data
+        const formData = new FormData(this);
+        const templateParams = {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          subject: formData.get('subject'),
+          message: formData.get('message'),
+          'g-recaptcha-response': recaptchaResponse
+        };
+
+        // Send email using EmailJS
+        emailjs.send('service_pcv2td7', 'template_iow30uf', templateParams)
+          .then(function(response) {
+            alert('Message sent successfully!'); // Success popup
+            document.getElementById('contactForm').reset(); // Reset form
+            grecaptcha.reset(); // Reset reCAPTCHA
+          }, function(error) {
+            alert('Failed to send message. Please try again.'); // Error popup
+          });
+      });
+    </script>
 
     <style>
       .portfolio-item .portfolio-content {
@@ -846,6 +879,11 @@
       }
       .modal.fade .modal-dialog {
         transition: transform 0.3s ease-out;
+      }
+      .contact-form .form-control {
+        background-color: black;
+        color: white;
+        border: 1px solid darkgreen;
       }
     </style>
 
