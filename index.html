@@ -676,6 +676,7 @@
             action="forms/contact.php"
             method="post"
             class="contact-form"
+            id="contactForm"
             data-aos="fade-up"
             data-aos-delay="600"
           >
@@ -790,17 +791,6 @@
     <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-    <!-- EmailJS SDK -->
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
-    ></script>
-    <script type="text/javascript">
-      (function () {
-        emailjs.init("pCv2TD7KjKZZTayec");
-      })();
-    </script>
-
     <!-- Google reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js"></script>
 
@@ -821,24 +811,27 @@
 
         // Collect form data
         const formData = new FormData(this);
-        const templateParams = {
-          name: formData.get('name'),
-          email: formData.get('email'),
-          subject: formData.get('subject'),
-          message: formData.get('message'),
-          'g-recaptcha-response': recaptchaResponse
-        };
+        formData.append('g-recaptcha-response', recaptchaResponse);
 
-        // Send email using EmailJS
-        emailjs.send('service_pcv2td7', 'template_iow30uf', templateParams)
-          .then(function(response) {
+        // Send form data to PHP script via AJAX
+        fetch('forms/contact.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
             alert('Message sent successfully!'); // Success popup
             document.getElementById('contactForm').reset(); // Reset form
             grecaptcha.reset(); // Reset reCAPTCHA
-          }, function(error) {
-            console.error('EmailJS error:', error); // Log error for debugging
-            alert('Failed to send message. Please try again.'); // Error popup
-          });
+          } else {
+            alert('Failed to send message: ' + data.message); // Error popup
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to send message. Please try again.'); // Error popup
+        });
       });
     </script>
 
