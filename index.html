@@ -673,7 +673,8 @@
           </div>
 
           <form
-            id="contactForm"
+            action="forms/contact.php"
+            method="post"
             class="contact-form"
             data-aos="fade-up"
             data-aos-delay="600"
@@ -835,6 +836,7 @@
             document.getElementById('contactForm').reset(); // Reset form
             grecaptcha.reset(); // Reset reCAPTCHA
           }, function(error) {
+            console.error('EmailJS error:', error); // Log error for debugging
             alert('Failed to send message. Please try again.'); // Error popup
           });
       });
