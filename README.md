@@ -86,7 +86,7 @@ A full-stack forum application built with the MERN stack (MongoDB, Express.js, R
 - 📧 **Email:** gbeti7669@gmail.com
 - 📱 **Phone:** +251904108991
 - 📍 **Location:** Addis Ababa, Ethiopia
-- 🌐 **Website:** [betelhemtaye.netlify.app](https://betelhemtaye.netlify.app/)
+- 🌐 **Website:** bettaye.com
 
 ## 📊 GitHub Stats
 
